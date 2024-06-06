@@ -37,10 +37,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alphethreshold: 0.4
-    - _QueueControl: 0
+    - _Alphethreshold: 0.63
+    - _QueueControl: 1
     - _QueueOffset: 0
-    - _ditherCount: 1.1
+    - _ditherCount: 1.4
     m_Colors:
     - _Color: {r: 0.5524029, g: 0.9924528, b: 0.9602585, a: 1}
   m_BuildTextureStacks: []
