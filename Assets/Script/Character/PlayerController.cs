@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     private NavMeshAgent agent;
     private Animator anim;
+    private ChararcterState chararcterState;
 
     private GameObject attackTarget;
     private float attackDuringTime;
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+        chararcterState = GetComponent<ChararcterState>();
     }
 
     private void Start()
@@ -56,7 +58,7 @@ public class PlayerController : MonoBehaviour
     {
         agent.isStopped = false;
         transform.LookAt(attackTarget.transform);
-        while (Vector3.Distance(attackTarget.transform.position,transform.position) > 1 + attackTarget.GetComponent<NavMeshAgent>().radius)
+        while (Vector3.Distance(attackTarget.transform.position,transform.position) > chararcterState.attackDataSo.attackRange + attackTarget.GetComponent<NavMeshAgent>().radius)
         {
             // Debug.Log(attackTarget.transform.position+"   " + transform.position);
             

@@ -11,6 +11,8 @@ public class EnemyControl : MonoBehaviour
     private NavMeshAgent agent;
     private Animator anim;
 
+    private ChararcterState chararcterState;
+
     [Header("Base Settings")]
     public float sightRadius;
     public bool isGuard;
@@ -18,6 +20,7 @@ public class EnemyControl : MonoBehaviour
     private GameObject attackPlayer;
     public float lookAtTime;
     private float remainLookAtTime;
+    private float lastAttackTime;
 
     [Header("¶¯»­ÇÐ»»²ÎÊý")]
     bool iswalk;
@@ -34,6 +37,7 @@ public class EnemyControl : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         speed = agent.speed;
         anim = GetComponent<Animator>();
+        chararcterState = GetComponent<ChararcterState>();
         guardPosition = transform.position;
         remainLookAtTime = lookAtTime;
     }
@@ -54,6 +58,7 @@ public class EnemyControl : MonoBehaviour
     {
         SwithState();
         SwithAnimation();
+        lastAttackTime -= Time.deltaTime;
     }
 
     void SwithAnimation()
@@ -61,6 +66,7 @@ public class EnemyControl : MonoBehaviour
         anim.SetBool("walk", iswalk);
         anim.SetBool("chase", ischase);
         anim.SetBool("follow", isfollow);
+        anim.SetBool("critical", chararcterState.isCritical);
     }
     void SwithState()
     {
@@ -69,7 +75,6 @@ public class EnemyControl : MonoBehaviour
         {
             enemyState = EnemyState.chase;
             //Debug.Log("find");
-            //StartCoroutine(waitFor());
         }
         switch (enemyState)
         {
@@ -108,36 +113,51 @@ public class EnemyControl : MonoBehaviour
                         enemyState = EnemyState.guard;
                     else
                         enemyState = EnemyState.patrol;
-                    
+
                 }
                 else
                 {
                     isfollow = true;
-                   // var ispath = agent.CalculatePath(attackPlayer.transform.position, agent.path);
-                  //  if(ispath)
-                   // {
-                   //     agent.SetPath(agent.path);
-                //    }
-                    if (Vector3.Distance(agent.destination, transform.position) < 1)
+                    agent.isStopped = false;
+                    if (Vector3.Distance(agent.destination, transform.position) < 1 && Vector3.Distance(transform.position,attackPlayer.transform.position)  > agent.stoppingDistance) 
                     {
                         agent.destination = attackPlayer.transform.position;
                     }
                     //agent.destination = attackPlayer.transform.position;
-                    //StartCoroutine(MoveEnemyToPlayer());
+
+                    
+                }
+                //¹¥»÷
+                if (TargetInAttackRange() || TargetInSkillRange())
+                {
+                    //Debug.Log("start Attack");
+                    isfollow =false;
+                    agent.isStopped = true;
+                    if (lastAttackTime < 0)
+                    {
+                        lastAttackTime = chararcterState.attackDataSo.coolDown;
+                        //±©»÷ÅÐ¶Ï
+                        chararcterState.isCritical = Random.value < chararcterState.attackDataSo.criticalChance;
+                        //Ö´ÐÐ¹¥»÷
+                        Attack();
+                    }
                 }
                 break;
             case EnemyState.dead:
                 break;
         }
     }
-    IEnumerator waitFor()
+    void Attack()
     {
-        yield return new WaitForSeconds(100f);
-    }
-    IEnumerator MoveEnemyToPlayer()
-    {
-        agent.destination = attackPlayer.transform.position;
-        yield return new WaitForSeconds(0.11f);
+        transform.LookAt(attackPlayer.transform);
+        if (TargetInAttackRange())
+        {
+            anim.SetTrigger("attack");
+        }
+        if(TargetInSkillRange())
+        {
+           // anim.SetTrigger("skill");
+        }
     }
     bool FoundPlayer()
     {
@@ -153,6 +173,24 @@ public class EnemyControl : MonoBehaviour
         }
         attackPlayer = null;
         return false;
+    }
+
+    bool TargetInAttackRange()
+    {
+        if(attackPlayer != null)
+        {
+            return Vector3.Distance(attackPlayer.transform.position, transform.position) <= chararcterState.attackDataSo.attackRange;
+        }else
+        { return false; }    
+    }
+
+    bool TargetInSkillRange() 
+    {
+        if(attackPlayer != null)
+        {
+            return Vector3.Distance(attackPlayer.transform.position, transform.position) <= chararcterState.attackDataSo.skillRange;
+        }else
+        { return false; }
     }
 
     void GetNewWayPoint()
