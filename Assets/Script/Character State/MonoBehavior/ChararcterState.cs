@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class ChararcterState : MonoBehaviour
@@ -67,5 +69,27 @@ public class ChararcterState : MonoBehaviour
         }
     }
     #endregion
+    #region character attack damage calculate
+    public void TakeDamage(ChararcterState attacker,ChararcterState defener)
+    {
+        int damage = Mathf.Max(attacker.CurrentDamage() - defener.currentDefence,0);
+        currentHealth = Mathf.Max(currentHealth - damage,0);
+        if(isCritical)
+        {
+            defener.GetComponent<Animator>().SetTrigger("hit");
+        }
+        //FIXME:
 
+    }
+
+    private int CurrentDamage()
+    {
+        float coreDamage = UnityEngine.Random.Range(attackDataSo.minDamage, attackDataSo.maxDamage);
+        if (isCritical)
+        {
+            coreDamage *= attackDataSo.criticalMultiplier;
+        }
+        return (int)coreDamage;
+    }
+    #endregion
 }

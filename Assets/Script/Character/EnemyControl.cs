@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,6 +11,7 @@ public class EnemyControl : MonoBehaviour
     private EnemyState enemyState;
     private NavMeshAgent agent;
     private Animator anim;
+    private Collider coll;
 
     private ChararcterState chararcterState;
 
@@ -21,11 +23,15 @@ public class EnemyControl : MonoBehaviour
     public float lookAtTime;
     private float remainLookAtTime;
     private float lastAttackTime;
+    private quaternion guardRotation;
+
+
 
     [Header("¶¯»­ÇÐ»»²ÎÊý")]
     bool iswalk;
     bool ischase;
     bool isfollow;
+    bool isdead;
 
     [Header("Patrol State")]
     public float partrolRange;
@@ -35,10 +41,13 @@ public class EnemyControl : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        speed = agent.speed;
         anim = GetComponent<Animator>();
         chararcterState = GetComponent<ChararcterState>();
+        coll = GetComponent<Collider>();
+
+        speed = agent.speed;
         guardPosition = transform.position;
+        guardRotation = transform.rotation;
         remainLookAtTime = lookAtTime;
     }
     private void Start()
@@ -51,7 +60,7 @@ public class EnemyControl : MonoBehaviour
             enemyState = EnemyState.patrol;
             GetNewWayPoint();
            // Debug.Log(transform.position +  "  "  + wayPoint);
-        }    
+        } 
     }
 
     private void Update()
@@ -59,6 +68,8 @@ public class EnemyControl : MonoBehaviour
         SwithState();
         SwithAnimation();
         lastAttackTime -= Time.deltaTime;
+        if (chararcterState.currentHealth <= 0)
+            isdead = true;
     }
 
     void SwithAnimation()
@@ -67,11 +78,16 @@ public class EnemyControl : MonoBehaviour
         anim.SetBool("chase", ischase);
         anim.SetBool("follow", isfollow);
         anim.SetBool("critical", chararcterState.isCritical);
+        anim.SetBool("dead", isdead);
     }
     void SwithState()
     {
+        if (isdead)
+        {
+            enemyState = EnemyState.dead;
+        }
         //find player,changeto chase;
-        if (FoundPlayer())
+        else if (FoundPlayer())
         {
             enemyState = EnemyState.chase;
             //Debug.Log("find");
@@ -79,6 +95,21 @@ public class EnemyControl : MonoBehaviour
         switch (enemyState)
         {
             case EnemyState.guard:
+                ischase = false;
+                if(transform.position != guardPosition)
+                {
+                    iswalk = true;
+                    agent.isStopped = false;
+                    agent.destination = guardPosition;
+                    if(Vector3.SqrMagnitude(guardPosition - transform.position) <= agent.stoppingDistance)
+                    {
+                        iswalk = false;
+                        transform.rotation = Quaternion.Lerp(transform.rotation, guardRotation, 0.01f);
+                        remainLookAtTime = lookAtTime;
+                    }
+                        
+
+                }
                 break;
             case EnemyState.patrol:
                 ischase = false;
@@ -137,13 +168,17 @@ public class EnemyControl : MonoBehaviour
                     {
                         lastAttackTime = chararcterState.attackDataSo.coolDown;
                         //±©»÷ÅÐ¶Ï
-                        chararcterState.isCritical = Random.value < chararcterState.attackDataSo.criticalChance;
+                        chararcterState.isCritical = UnityEngine.Random.value < chararcterState.attackDataSo.criticalChance;
                         //Ö´ÐÐ¹¥»÷
                         Attack();
                     }
                 }
                 break;
             case EnemyState.dead:
+                coll.enabled = false;
+                agent.enabled = false;
+
+                Destroy(gameObject, 2f);
                 break;
         }
     }
@@ -196,8 +231,8 @@ public class EnemyControl : MonoBehaviour
     void GetNewWayPoint()
     {
         remainLookAtTime = lookAtTime;
-        float randomx = Random.Range(-partrolRange, partrolRange);
-        float randomz = Random.Range(-partrolRange, partrolRange);
+        float randomx = UnityEngine.Random.Range(-partrolRange, partrolRange);
+        float randomz = UnityEngine.Random.Range(-partrolRange, partrolRange);
 
         Vector3 randomPoint = new Vector3(guardPosition.x + randomx,transform.position.y,guardPosition.z + randomz);
         NavMeshHit hit;
@@ -208,5 +243,15 @@ public class EnemyControl : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, sightRadius);
+    }
+
+    //animation event
+    void Hit()
+    {
+        if(attackPlayer != null)
+        {
+            var targetState = attackPlayer.GetComponent<ChararcterState>();
+            targetState.TakeDamage(chararcterState, targetState);
+        }
     }
 }
