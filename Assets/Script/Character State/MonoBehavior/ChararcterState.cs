@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ChararcterState : MonoBehaviour
 {
+    public CharacterDataSo templateData;
     public CharacterDataSo characterData;
     public AttackDataSo attackDataSo;
 
@@ -70,6 +71,11 @@ public class ChararcterState : MonoBehaviour
     }
     #endregion
     #region character attack damage calculate
+    private void Awake()
+    {
+        if (templateData != null)
+            characterData = Instantiate(templateData);
+    }
     public void TakeDamage(ChararcterState attacker,ChararcterState defener)
     {
         int damage = Mathf.Max(attacker.CurrentDamage() - defener.currentDefence,0);

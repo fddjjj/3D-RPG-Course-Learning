@@ -23,8 +23,10 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        MouseManager.instance.OnMouseClicked += MoveToTarget;
-        MouseManager.instance.OnEnemyClicked += AttackEvent;
+        MouseManager.Instance.OnMouseClicked += MoveToTarget;
+        MouseManager.Instance.OnEnemyClicked += AttackEvent;
+
+        GameManager.Instance.RigistrPlayer(chararcterState);
     }
 
 
@@ -32,6 +34,10 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         isdead = chararcterState.currentHealth == 0;
+        if (isdead)
+        {
+            GameManager.Instance.NotifyObserve();
+        }
         anim.SetFloat("speed", agent.velocity.sqrMagnitude);
         anim.SetBool("dead", isdead);
         if (attackDuringTime >= 0)
@@ -42,13 +48,15 @@ public class PlayerController : MonoBehaviour
     public void MoveToTarget(Vector3 target)
     {
         StopAllCoroutines();
+        if (isdead) return;
         agent.isStopped = false;
         agent.destination = target;
        // Debug.Log(agent.destination);
     }  
     private void AttackEvent(GameObject target)
     {
-        if(target != null)
+        if (isdead) return;
+        if (target != null)
         {
             attackTarget = target;
             chararcterState.isCritical = UnityEngine.Random.value < chararcterState.attackDataSo.criticalChance;

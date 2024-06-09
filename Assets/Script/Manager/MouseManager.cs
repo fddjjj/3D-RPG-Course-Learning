@@ -4,9 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 
-public class MouseManager : MonoBehaviour
+public class MouseManager : SingleTon<MouseManager>
 {
-    public static MouseManager instance;
 
 
     public Texture2D point, doorway, attack, target, arrow;
@@ -17,13 +16,10 @@ public class MouseManager : MonoBehaviour
 
     public event Action<Vector3> OnMouseClicked;
     public event Action<GameObject> OnEnemyClicked;
-
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance != null)
-            Destroy(gameObject);
-
-        instance = this;
+        base.Awake();
+       // DontDestroyOnLoad(this);
     }
     private void Update()
     {

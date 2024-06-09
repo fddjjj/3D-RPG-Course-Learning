@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public enum EnemyState { guard, patrol, chase, dead }
-[RequireComponent(typeof(NavMeshAgent))]
-public class EnemyControl : MonoBehaviour
+[RequireComponent(typeof(NavMeshAgent),typeof(ChararcterState))]
+public class EnemyControl : MonoBehaviour,IEndGameObserve
 {
     private EnemyState enemyState;
     private NavMeshAgent agent;
@@ -24,7 +24,7 @@ public class EnemyControl : MonoBehaviour
     private float remainLookAtTime;
     private float lastAttackTime;
     private quaternion guardRotation;
-
+    private bool isPlayerDead;
 
 
     [Header("动画切换参数")]
@@ -62,14 +62,29 @@ public class EnemyControl : MonoBehaviour
            // Debug.Log(transform.position +  "  "  + wayPoint);
         } 
     }
+    private void OnEnable()
+    {
+        GameManager.Instance.AddObserve(this);
+    }
+
+    private void OnDisable()
+    {
+        if (!GameManager.IsInitialized) return;
+        GameManager.Instance.RemoveObserve(this);
+    }
 
     private void Update()
-    {
-        SwithState();
-        SwithAnimation();
-        lastAttackTime -= Time.deltaTime;
+    {   
         if (chararcterState.currentHealth <= 0)
             isdead = true;
+        if (!isPlayerDead)
+        {
+            SwithState();
+            SwithAnimation();
+            lastAttackTime -= Time.deltaTime;
+            
+        }
+        
     }
 
     void SwithAnimation()
@@ -253,5 +268,17 @@ public class EnemyControl : MonoBehaviour
             var targetState = attackPlayer.GetComponent<ChararcterState>();
             targetState.TakeDamage(chararcterState, targetState);
         }
+    }
+
+    public void EndNotify()
+    {
+        //获胜动画
+        //停止移动
+        ischase = false;
+        iswalk = false;
+        attackPlayer = null;
+        anim.SetBool("win", true);
+        isPlayerDead = true;
+
     }
 }
