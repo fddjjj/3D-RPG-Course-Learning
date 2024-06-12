@@ -19,7 +19,7 @@ public class EnemyControl : MonoBehaviour,IEndGameObserve
     public float sightRadius;
     public bool isGuard;
     private float speed;
-    private GameObject attackPlayer;
+    protected GameObject attackPlayer;
     public float lookAtTime;
     private float remainLookAtTime;
     private float lastAttackTime;
@@ -191,8 +191,8 @@ public class EnemyControl : MonoBehaviour,IEndGameObserve
                 break;
             case EnemyState.dead:
                 coll.enabled = false;
-                agent.enabled = false;
-
+                //agent.enabled = false;
+                agent.radius = 0;
                 Destroy(gameObject, 2f);
                 break;
         }
@@ -206,7 +206,7 @@ public class EnemyControl : MonoBehaviour,IEndGameObserve
         }
         if(TargetInSkillRange())
         {
-           // anim.SetTrigger("skill");
+            anim.SetTrigger("skill");
         }
     }
     bool FoundPlayer()
