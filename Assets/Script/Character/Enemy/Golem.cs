@@ -9,6 +9,8 @@ public class Golem : EnemyControl
 
     [Header("skill")]
     public float kickForce;
+    public GameObject rockPrefab;
+    public Transform handPosition;
 
     public void KickOff()
     {
@@ -19,8 +21,16 @@ public class Golem : EnemyControl
             direction.Normalize();
             targetState.GetComponent<NavMeshAgent>().isStopped = true;
             targetState.GetComponent<NavMeshAgent>().velocity = direction * kickForce;
-            targetState.GetComponent<Animator>().SetTrigger("Dizzy");
+            targetState.GetComponent<Animator>().SetTrigger("dizzy");
             targetState.TakeDamage(chararcterState, targetState);
+        }
+    }
+    public void ThrowRock() 
+    {
+        if(attackPlayer != null)
+        {
+            var rock = Instantiate(rockPrefab, handPosition.position, Quaternion.identity);
+            rock.GetComponent<Rock>().target = attackPlayer;
         }
     }
 }

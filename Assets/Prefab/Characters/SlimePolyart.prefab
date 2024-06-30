@@ -159,6 +159,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7913250496508857776}
   m_LocalEulerAnglesHint: {x: 42.167183, y: -90, z: 0}
+--- !u!1 &5382636529644950404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5048849533583302608}
+  m_Layer: 0
+  m_Name: HealthBar Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5048849533583302608
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5382636529644950404}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9068495112152739995}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5788723935744078271
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,6 +459,7 @@ GameObject:
   - component: {fileID: 2810203012918629308}
   - component: {fileID: 6114114546691202089}
   - component: {fileID: 3278105875432638853}
+  - component: {fileID: 1632615426801412056}
   m_Layer: 7
   m_Name: SlimePolyart
   m_TagString: enemy
@@ -450,6 +482,7 @@ Transform:
   m_Children:
   - {fileID: 3978657374710593430}
   - {fileID: 9090407676656714945}
+  - {fileID: 5048849533583302608}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -157.292, z: 0}
 --- !u!95 &6641171131346303633
@@ -548,3 +581,19 @@ MonoBehaviour:
   characterData: {fileID: 0}
   attackDataSo: {fileID: 11400000, guid: f692a50c4c09d5240b1a822dc362b43f, type: 2}
   isCritical: 0
+--- !u!114 &1632615426801412056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8554784762004321218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59eb1cb2ee47278438bc33b3689a5a39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthUIPrefab: {fileID: 5124978958658765159, guid: 951e37bdebf48b14fbac4b1ab6ed5cab, type: 3}
+  barPoint: {fileID: 5048849533583302608}
+  alwaysVisible: 0
+  visibleTime: 3

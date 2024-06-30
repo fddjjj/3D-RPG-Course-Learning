@@ -762,6 +762,7 @@ GameObject:
   - component: {fileID: 5853403092774275333}
   - component: {fileID: 7177603491947846983}
   - component: {fileID: 7363029583310152260}
+  - component: {fileID: 7543619036898531888}
   m_Layer: 0
   m_Name: GruntPolyart
   m_TagString: enemy
@@ -784,6 +785,7 @@ Transform:
   m_Children:
   - {fileID: 6936295255218881350}
   - {fileID: 9151920410831426505}
+  - {fileID: 5589988034576990148}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -175.768, z: 0}
 --- !u!95 &5729939981210962617
@@ -883,6 +885,53 @@ MonoBehaviour:
   lookAtTime: 3
   partrolRange: 0
   kickForce: 15
+--- !u!114 &7543619036898531888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7586037590064134549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59eb1cb2ee47278438bc33b3689a5a39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthUIPrefab: {fileID: 5124978958658765159, guid: 951e37bdebf48b14fbac4b1ab6ed5cab, type: 3}
+  barPoint: {fileID: 5589988034576990148}
+  alwaysVisible: 0
+  visibleTime: 3
+--- !u!1 &7615975214638440800
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5589988034576990148}
+  m_Layer: 0
+  m_Name: HealthBar point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5589988034576990148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7615975214638440800}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2148134226530488769}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7676045432245548342
 GameObject:
   m_ObjectHideFlags: 0

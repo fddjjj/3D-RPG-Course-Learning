@@ -13,12 +13,14 @@ public class PlayerController : MonoBehaviour
     private GameObject attackTarget;
     private float attackDuringTime;
     private bool isdead;
+    private float stopDistance;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         chararcterState = GetComponent<ChararcterState>();
+        stopDistance = agent.stoppingDistance;
     }
 
     private void Start()
@@ -49,6 +51,7 @@ public class PlayerController : MonoBehaviour
     {
         StopAllCoroutines();
         if (isdead) return;
+        agent.stoppingDistance = stopDistance;
         agent.isStopped = false;
         agent.destination = target;
        // Debug.Log(agent.destination);
@@ -69,8 +72,9 @@ public class PlayerController : MonoBehaviour
     IEnumerator MoveToAttackPosition()
     {
         agent.isStopped = false;
+        agent.stoppingDistance = chararcterState.attackDataSo.attackRange;
         transform.LookAt(attackTarget.transform);
-        while (Vector3.Distance(attackTarget.transform.position,transform.position) > chararcterState.attackDataSo.attackRange + attackTarget.GetComponent<NavMeshAgent>().radius)
+        while (Vector3.Distance(attackTarget.transform.position,transform.position) > chararcterState.attackDataSo.attackRange )
         {
             // Debug.Log(attackTarget.transform.position+"   " + transform.position);
             
@@ -92,7 +96,20 @@ public class PlayerController : MonoBehaviour
     //Animation Event;
     void Hit()
     {
-        var targetState = attackTarget.GetComponent<ChararcterState>();
-        targetState.TakeDamage(chararcterState, targetState);
+        if (attackTarget.CompareTag("attackable"))
+        {
+            if(attackTarget.GetComponent<Rock>() && attackTarget.GetComponent<Rock>().rockState == Rock.RockStates.HitNothing)
+            {
+                attackTarget.GetComponent<Rock>().rockState = Rock.RockStates.HitGolem;
+                attackTarget.GetComponent<Rigidbody>().velocity = Vector3.one;
+                attackTarget.GetComponent<Rigidbody>().AddForce(transform.forward * 20, ForceMode.Impulse);
+            }
+        }
+        else
+        {
+            var targetState = attackTarget.GetComponent<ChararcterState>();
+            targetState.TakeDamage(chararcterState, targetState);
+        }
+        
     }
 }

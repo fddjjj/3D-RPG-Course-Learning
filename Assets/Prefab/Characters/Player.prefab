@@ -1648,6 +1648,7 @@ GameObject:
   - component: {fileID: 1418134944266419868}
   - component: {fileID: 5422102988526004701}
   - component: {fileID: 8668695234458622784}
+  - component: {fileID: 8963079737872734473}
   m_Layer: 6
   m_Name: Player
   m_TagString: player
@@ -1763,10 +1764,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5103a697e4aaa074cb43536f8ca8c28b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  templateData: {fileID: 0}
-  characterData: {fileID: 11400000, guid: 35d6cfe0ae9b6314b9e8f97917c99255, type: 2}
+  templateData: {fileID: 11400000, guid: 35d6cfe0ae9b6314b9e8f97917c99255, type: 2}
+  characterData: {fileID: 0}
   attackDataSo: {fileID: 11400000, guid: 010d2b91601648246a11194a01964761, type: 2}
   isCritical: 0
+--- !u!54 &8963079737872734473
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4999327062350558410}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5209641364247194334
 GameObject:
   m_ObjectHideFlags: 0
