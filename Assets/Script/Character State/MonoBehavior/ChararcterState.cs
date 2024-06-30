@@ -87,6 +87,10 @@ public class ChararcterState : MonoBehaviour
         }
         //FIXME:
         UpdateHealthBarOnAttack?.Invoke(currentHealth, maxHealth);
+        if(currentHealth <= 0)
+        {
+            attacker.characterData.UpdateExp(characterData.killPoint);
+        }
 
     }
     public void TakeDamage(int damage,ChararcterState defener)
