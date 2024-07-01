@@ -2,14 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Cinemachine;
 
 public class GameManager : SingleTon<GameManager>
 {
     public ChararcterState playerState;
     List<IEndGameObserve> endGameObserve = new List<IEndGameObserve>();
+    private CinemachineFreeLook followCamera;
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(this);
+    }
     public void RigistrPlayer(ChararcterState player)
     {
         playerState = player;
+
+        followCamera = FindObjectOfType<CinemachineFreeLook>();
+        if(followCamera != null )
+        {
+            followCamera.Follow = playerState.transform.GetChild(2);
+            followCamera.LookAt = playerState.transform.GetChild(2);
+        }
     }
     public void AddObserve(IEndGameObserve observe)
     {

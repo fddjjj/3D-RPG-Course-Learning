@@ -22,16 +22,22 @@ public class PlayerController : MonoBehaviour
         chararcterState = GetComponent<ChararcterState>();
         stopDistance = agent.stoppingDistance;
     }
-
-    private void Start()
+    private void OnEnable()
     {
         MouseManager.Instance.OnMouseClicked += MoveToTarget;
         MouseManager.Instance.OnEnemyClicked += AttackEvent;
+    }
 
+    private void Start()
+    {
         GameManager.Instance.RigistrPlayer(chararcterState);
     }
 
-
+    private void OnDisable()
+    {
+        MouseManager.Instance.OnMouseClicked -= MoveToTarget;
+        MouseManager.Instance.OnEnemyClicked -= AttackEvent;
+    }
 
     private void Update()
     {

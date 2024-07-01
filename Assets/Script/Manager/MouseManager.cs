@@ -19,7 +19,7 @@ public class MouseManager : SingleTon<MouseManager>
     protected override void Awake()
     {
         base.Awake();
-       // DontDestroyOnLoad(this);
+        DontDestroyOnLoad(this);
     }
     private void Update()
     {
