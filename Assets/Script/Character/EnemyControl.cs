@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
-
 public enum EnemyState { guard, patrol, chase, dead }
 [RequireComponent(typeof(NavMeshAgent),typeof(ChararcterState))]
 public class EnemyControl : MonoBehaviour,IEndGameObserve
