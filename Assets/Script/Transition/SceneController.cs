@@ -29,11 +29,12 @@ public class SceneController : SingleTon<SceneController>
 
     IEnumerator Transition(string sceneName,TransitionDestination.DestinationTag destinationTag)
     {
-
+        SaveManager.Instance.SavePlayerData();
         if (SceneManager.GetActiveScene().name != sceneName)
         {
             yield return SceneManager.LoadSceneAsync(sceneName);
             yield return Instantiate(playerPrefab, GetDestination(destinationTag).transform.position, GetDestination(destinationTag).transform.rotation);
+            SaveManager.Instance.LoadPlayerData();
             yield break;
         }else
         {
@@ -57,5 +58,35 @@ public class SceneController : SingleTon<SceneController>
         }
 
         return null;
+    }
+    public void TransitionToLoadGame()
+    {
+        StartCoroutine(LoadScene(SaveManager.Instance.SceneName));
+    }
+    public void TransitionToFirstScene()
+    {
+        StartCoroutine(LoadScene("SampleScene"));
+    }
+
+    public void TransitionToMain() 
+    {
+        StartCoroutine(LoadMain());
+    }
+
+    IEnumerator LoadScene(string sceneName)
+    {
+        if(sceneName != "")
+        {
+            yield return SceneManager.LoadSceneAsync(sceneName);
+            yield return player = Instantiate(playerPrefab,GameManager.Instance.GetEntrance().position,GameManager.Instance.GetEntrance().rotation);
+            SaveManager.Instance.SavePlayerData();
+            yield break;
+        }
+    }
+
+    IEnumerator LoadMain()
+    {
+        yield return SceneManager.LoadSceneAsync("Main");
+        yield break;
     }
 }
